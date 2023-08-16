@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.moharm</groupId>
-	<artifactId>security</artifactId>
+	<artifactId>Spring_Boot_JWT</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>security</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Demo project for Spring Boot with JWT</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
