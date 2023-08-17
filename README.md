@@ -1,2 +1,2 @@
-# JWT_Spring_Security
-this repository descripe how to impliment a JWT Sercurity to your Spring boot project.
+# JWT with SpringBoot 3 + Spring Security 6
+this repository describes how to implement a JWT security to your Spring boot project.
