@@ -1,4 +1,4 @@
-package com.moharm.security.user;
+package com.moharm.security.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
