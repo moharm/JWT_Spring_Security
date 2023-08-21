@@ -1,12 +1,11 @@
 package com.moharm.security.service;
 
-import com.moharm.security.config.JwtService;
 import com.moharm.security.model.AuthenticationRequest;
 import com.moharm.security.model.AuthenticationResponse;
 import com.moharm.security.model.RegisterRequest;
 import com.moharm.security.repository.UserRepository;
-import com.moharm.security.user.Role;
-import com.moharm.security.user.User;
+import com.moharm.security.entity.Role;
+import com.moharm.security.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

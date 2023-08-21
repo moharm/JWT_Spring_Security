@@ -1,6 +1,6 @@
 package com.moharm.security.repository;
 
-import com.moharm.security.user.User;
+import com.moharm.security.entity.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

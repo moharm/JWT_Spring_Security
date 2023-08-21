@@ -1,5 +1,24 @@
 package com.moharm.security.config;
 
+import static com.moharm.security.entity.Permission.ADMIN_CREATE;
+import static com.moharm.security.entity.Permission.ADMIN_DELETE;
+import static com.moharm.security.entity.Permission.ADMIN_READ;
+import static com.moharm.security.entity.Permission.ADMIN_UPDATE;
+import static com.moharm.security.entity.Permission.MANAGER_CREATE;
+import static com.moharm.security.entity.Permission.MANAGER_DELETE;
+import static com.moharm.security.entity.Permission.MANAGER_READ;
+import static com.moharm.security.entity.Permission.MANAGER_UPDATE;
+import static com.moharm.security.entity.Role.ADMIN;
+import static com.moharm.security.entity.Role.MANAGER;
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,8 +44,26 @@ public class SecurityConfiguration {
     http.csrf()
         .disable()
         .authorizeHttpRequests()
-        .requestMatchers("/api/moharm/auth/**")
+        .requestMatchers(
+            "/api/v1/auth/**",
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/swagger-ui.html"
+        )
         .permitAll()
+        .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
+        .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
+        .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
+        .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
+        .requestMatchers(DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())
+
         .anyRequest()
         .authenticated()
         .and()
