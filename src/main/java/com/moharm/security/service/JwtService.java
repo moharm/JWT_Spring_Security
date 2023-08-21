@@ -1,4 +1,4 @@
-package com.moharm.security.config;
+package com.moharm.security.service;
 
 import io.jsonwebtoken.Claims;
 
@@ -13,13 +13,18 @@ import java.util.Map;
 import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class JwtService {
 
 
-  public static final String SECRET_KEY = "87774029bcb86ffe95b6c63dca5427425746829a3d74f24650ac4c53af0b767a";
-
+  @Value("${application.security.jwt.secret-key}")
+  private String secretKey;
+  @Value("${application.security.jwt.expiration}")
+  private long jwtExpiration;
+  @Value("${application.security.jwt.refresh-token.expiration}")
+  private long refreshExpiration;
   public String extractUserName(String token) {
     return extarctClaim(token, Claims::getSubject);
   }
@@ -66,8 +71,38 @@ public class JwtService {
   }
 
   public Key getSigningKey() {
-    byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+    byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     return Keys.hmacShaKeyFor(keyBytes);
+  }
+
+  public String generateRefreshToken(
+      UserDetails userDetails
+  ) {
+    return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+  }
+
+  private String buildToken(
+      Map<String, Object> extraClaims,
+      UserDetails userDetails,
+      long expiration
+  ) {
+    return Jwts
+        .builder()
+        .setClaims(extraClaims)
+        .setSubject(userDetails.getUsername())
+        .setIssuedAt(new Date(System.currentTimeMillis()))
+        .setExpiration(new Date(System.currentTimeMillis() + expiration))
+        .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+        .compact();
+  }
+
+  public String extractUsername(String token) {
+    return extractClaim(token, Claims::getSubject);
+  }
+
+  public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    final Claims claims = extractAllClaims(token);
+    return claimsResolver.apply(claims);
   }
 
 }
